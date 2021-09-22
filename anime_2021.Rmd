@@ -8,11 +8,122 @@ output: html_document
 ```{r setup, include=FALSE} 
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
-#### 1) Proposer un code permettant de regrouper les données contenues dans anime.zip dans un seul et même data.frame
 
 ```{r}
 #Attach the necessary libraries
 library(dplyr)
 library(readr)
 ```
+
+#### 1) Proposer un code permettant de regrouper les données contenues/n dans anime.zip dans un seul et même data.frame.
+
+#### 1.1) Copy the raw path of the zip folder
+```{r}
+raw_path <- "C:/Users/cleme/Documents/GitHub/projet_anime_TIDE/anime.zip"
+```
+
+#### 1.2) Unzip the folder
+```{r}
+anime_dt <- unzip(raw_path, files = NULL, list = F, exdir = "anime_data")
+```
+
+#### 1.3) Capture the path of the new data unzip
+```{r}
+dt <- "C:/Users/cleme/Documents/GitHub/projet_anime_TIDE/anime_data"
+```
+
+#### 1.4 Create a function to merge all the datasets
+```{r}
+merge_dt = function(mypath){
+
+  #capture the names of the files in the folder
+  filenames=list.files(path=mypath, full.names=TRUE)
+  
+  #read all the files in the folder
+  data_list = lapply(filenames, function(x){
+    read.csv(file = x, header = TRUE)
+    }) #x --> names of the files to read (in this case "filenames")
+  
+  #combine the datasets with the reduce function 
+  #after merging them two by two (merge function)
+  Reduce(function(x, y){merge(x, y, all = T)}, data_list)
+}
+```
+
+#### 1.5) Store the complete merged dataset
+```{r}
+anime_df <- merge_dt(dt)
+```
+
+# 2) Observer pour chaque variable, le nombre et la proportion de valeurs manquantes
+
+```{r}
+  # Number of missing values
+na_num <- sapply(anime_df,function(x) sum(is.na(x)))
+print.table(na_num)
+```
+
+```{r}
+sapply(anime_df,function(x) sum(is.na(x))/length(x))*100
+```
+
+#### Nous observons un nombre équivalent de valeurs manquantes dans les variables rating, soit 230 qui correspondent à un pourcentage de 1,87%.
+
+#### Cependant, nous observons des cases vides dans les données. Nous devons les gérer comme des NAs.
+
+```{r}
+anime_df[anime_df == ""]<- NA # Remplacer les vides par des NAs.
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

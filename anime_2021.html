@@ -171,11 +171,44 @@ pre code {
 </div>
 
 
-<div id="proposer-un-code-permettant-de-regrouper-les-données-contenues-dans-anime.zip-dans-un-seul-et-même-data.frame" class="section level4">
-<h4>1) Proposer un code permettant de regrouper les données contenues dans anime.zip dans un seul et même data.frame</h4>
 <pre class="r"><code>#Attach the necessary libraries
 library(dplyr)
 library(readr)</code></pre>
+<div id="proposer-un-code-permettant-de-regrouper-les-données-contenuesn-dans-anime.zip-dans-un-seul-et-même-data.frame." class="section level4">
+<h4>1) Proposer un code permettant de regrouper les données contenues/n dans anime.zip dans un seul et même data.frame.</h4>
+</div>
+<div id="copy-the-raw-path-of-the-zip-folder" class="section level4">
+<h4>1.1) Copy the raw path of the zip folder</h4>
+<pre class="r"><code>raw_path &lt;- &quot;C:/Users/cleme/Documents/GitHub/projet_anime_TIDE/anime.zip&quot;</code></pre>
+</div>
+<div id="unzip-the-folder" class="section level4">
+<h4>1.2) Unzip the folder</h4>
+<pre class="r"><code>anime_dt &lt;- unzip(raw_path, files = NULL, list = F, exdir = &quot;anime_data&quot;)</code></pre>
+</div>
+<div id="capture-the-path-of-the-new-data-unzip" class="section level4">
+<h4>1.3) Capture the path of the new data unzip</h4>
+<pre class="r"><code>dt &lt;- &quot;C:/Users/cleme/Documents/GitHub/projet_anime_TIDE/anime_data&quot;</code></pre>
+</div>
+<div id="create-a-function-to-merge-all-the-datasets" class="section level4">
+<h4>1.4 Create a function to merge all the datasets</h4>
+<pre class="r"><code>merge_dt = function(mypath){
+
+  #capture the names of the files in the folder
+  filenames=list.files(path=mypath, full.names=TRUE)
+  
+  #read all the files in the folder
+  data_list = lapply(filenames, function(x){
+    read.csv(file = x, header = TRUE)
+    }) #x --&gt; names of the files to read (in this case &quot;filenames&quot;)
+  
+  #combine the datasets with the reduce function 
+  #after merging them two by two (merge function)
+  Reduce(function(x, y){merge(x, y, all = T)}, data_list)
+}</code></pre>
+</div>
+<div id="store-the-complete-merged-dataset" class="section level4">
+<h4>1.5) Store the complete merged dataset</h4>
+<pre class="r"><code>anime_df &lt;- merge_dt(dt)</code></pre>
 </div>
 
 
